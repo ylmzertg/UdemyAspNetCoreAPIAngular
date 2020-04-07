@@ -18,11 +18,16 @@ using UdemyAngularData.DataContracts;
 using UdemyAngularData.DataContext;
 using UdemyAngularData.DbModels;
 using UdemyAngularData.Implementaion;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using UdemyAngularUI.Helper;
 
 namespace UdemyAngularUI
 {
     public class Startup
     {
+        [Obsolete]
         public Startup(Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -52,11 +57,37 @@ namespace UdemyAngularUI
 
             services.AddScoped<IApplicationUserBusinessEngine, ApplicationUserBusinessEngine>();
             services.AddCors();
+
+
+            var appSettingSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingSection);
+
+            //JWT Authentication
+            var appSettins = appSettingSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettins.Key);
+
+            services.AddAuthentication(au =>
+            {
+                au.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                au.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(jwt =>
+            {
+                jwt.RequireHttpsMetadata = false;
+                jwt.SaveToken = true;
+                jwt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             app.UseCors(options =>
             {
                 options.WithOrigins("http://localhost:4200")

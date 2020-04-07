@@ -10,5 +10,8 @@ namespace UdemyAngularData.DbModels
     {
         [Column(TypeName = "nvarchar(150)")]
         public string FullName { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }
