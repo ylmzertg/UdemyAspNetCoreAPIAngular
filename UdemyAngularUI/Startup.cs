@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using UdemyAngularUI.Helper;
+using Microsoft.AspNetCore.Mvc;
 
 namespace UdemyAngularUI
 {
@@ -59,7 +60,7 @@ namespace UdemyAngularUI
             services.AddCors();
 
 
-            var appSettingSection = Configuration.GetSection("AppSettings");
+            var appSettingSection = Configuration.GetSection("Token");
             services.Configure<AppSettings>(appSettingSection);
 
             //JWT Authentication
@@ -82,6 +83,8 @@ namespace UdemyAngularUI
                     ValidateAudience = false
                 };
             });
+            services.AddControllers().AddNewtonsoftJson(options =>
+                             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

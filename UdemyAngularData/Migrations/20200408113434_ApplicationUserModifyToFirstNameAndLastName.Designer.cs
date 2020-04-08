@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UdemyAngularData.DataContext;
 
 namespace UdemyAngularData.Migrations
 {
     [DbContext(typeof(UdemyAngularDbContext))]
-    partial class UdemyAngularDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200408113434_ApplicationUserModifyToFirstNameAndLastName")]
+    partial class ApplicationUserModifyToFirstNameAndLastName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
